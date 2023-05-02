@@ -49,7 +49,15 @@ export default function Login() {
   React.useEffect(() => {
     const checkUserExist = () => {
       if (!(token == null)) {
-        navigate("/dashboard");
+        if (userType === "Doctor") {
+          navigate("/doctorDashboard");
+        } else if (userType === "Patient") {
+          navigate("/patientDashboard");
+        } else if (userType === "Pharmacist") {
+          navigate("/pharmacistDashboard");
+        } else if (userType === "Admin") {
+          navigate("/dashboard");
+        }
       }
     };
     checkUserExist();
@@ -178,12 +186,22 @@ export default function Login() {
                   {/* <Link href="/forgetPassword" variant="body2">
                     Forgot password?
                   </Link> */}
-                  <Link onClick={() => {navigate("/forgetPassword")}} variant="body2">
+                  <Link
+                    onClick={() => {
+                      navigate("/forgetPassword");
+                    }}
+                    variant="body2"
+                  >
                     Forgot password?
                   </Link>
                 </Grid>
                 <Grid item>
-                  <Link onClick={() => {navigate("/signUp")}} variant="body2">
+                  <Link
+                    onClick={() => {
+                      navigate("/signUp");
+                    }}
+                    variant="body2"
+                  >
                     {"Don't have an account? Sign Up"}
                   </Link>
                 </Grid>

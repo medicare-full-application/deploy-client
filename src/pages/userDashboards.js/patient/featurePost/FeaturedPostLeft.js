@@ -53,8 +53,8 @@ FeaturedPostLeft.propTypes = {
   post: PropTypes.shape({
     date: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
-    image: PropTypes.string.isRequired,
-    imageLabel: PropTypes.string.isRequired,
+    image: PropTypes.string,
+    imageLabel: PropTypes.string,
     title: PropTypes.string.isRequired,
   }).isRequired,
 };

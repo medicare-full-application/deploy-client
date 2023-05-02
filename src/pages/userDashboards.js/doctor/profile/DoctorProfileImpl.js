@@ -188,9 +188,9 @@ export const DoctorProfileImpl = () => {
           </Grid>
           <Grid item xs={1}>
             {/* <Button variant="contained" href="/profileUpdate"> */}
-            <Button variant="contained" type="submit">
+            {/* <Button variant="contained" type="submit">
               Update
-            </Button>
+            </Button> */}
           </Grid>
         </Grid>
         <Stack

@@ -11,6 +11,8 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 import { logOutUser } from "../redux/userApiCalls";
 import Tooltip from "@mui/material/Tooltip";
+import { removeNews } from "../redux/newsRedux";
+import { removeMedicalRecords } from "../redux/medicalRecordRedux";
 
 export default function MainHeaderMenu() {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -30,9 +32,11 @@ export default function MainHeaderMenu() {
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, Log out!",
-    }).then((result) => {
+    }).then(async (result) => {
       if (result.isConfirmed) {
-        logOutUser(dispatch);
+        await logOutUser(dispatch);
+        dispatch(removeNews());
+        dispatch(removeMedicalRecords());
         navigate("/");
       }
     });

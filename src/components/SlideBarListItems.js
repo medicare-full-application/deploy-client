@@ -90,14 +90,14 @@ export const SlideBarListItems = () => {
             name: "dashboard",
           },
           {
-            id: "leftbar-listItem-66",
+            id: "leftbar-listItem-7",
             listName: "Add Child",
             icon: <BookmarksIcon />,
             link: "/addChild",
             name: "dashboard",
           },
           {
-            id: "leftbar-listItem-66",
+            id: "leftbar-listItem-8",
             listName: "Children List",
             icon: <BookmarksIcon />,
             link: `/patient/child/${userId}`,
@@ -107,28 +107,28 @@ export const SlideBarListItems = () => {
       } else {
         listItems = [
           {
-            id: "leftbar-listItem-4",
+            id: "leftbar-listItem-9",
             listName: "Dashboard",
             icon: <BookmarksIcon />,
             link: "/patientDashboard",
             name: "dashboard",
           },
           {
-            id: "leftbar-listItem-5",
+            id: "leftbar-listItem-10",
             listName: "Doctors",
             icon: <BookmarksIcon />,
             link: "/doctor",
             name: "dashboard",
           },
           {
-            id: "leftbar-listItem-6",
+            id: "leftbar-listItem-11",
             listName: "My Medical Records",
             icon: <BookmarksIcon />,
             link: "/medicalRecord",
             name: "dashboard",
           },
           {
-            id: "leftbar-listItem-66",
+            id: "leftbar-listItem-12",
             listName: "Add Child",
             icon: <BookmarksIcon />,
             link: "/addChild",
@@ -139,21 +139,21 @@ export const SlideBarListItems = () => {
     } else {
       listItems = [
         {
-          id: "leftbar-listItem-4",
+          id: "leftbar-listItem-13",
           listName: "Dashboard",
           icon: <BookmarksIcon />,
           link: "/patientDashboard",
           name: "dashboard",
         },
         {
-          id: "leftbar-listItem-5",
+          id: "leftbar-listItem-14",
           listName: "Doctors",
           icon: <BookmarksIcon />,
           link: "/doctor",
           name: "dashboard",
         },
         {
-          id: "leftbar-listItem-6",
+          id: "leftbar-listItem-15",
           listName: "My Medical Records",
           icon: <BookmarksIcon />,
           link: "/medicalRecord",
@@ -164,7 +164,7 @@ export const SlideBarListItems = () => {
   } else if (userType === "Pharmacist") {
     listItems = [
       {
-        id: "leftbar-listItem-7",
+        id: "leftbar-listItem-16",
         listName: "Dashboard",
         icon: <BookmarksIcon />,
         link: "/pharmacistDashboard",
@@ -178,7 +178,7 @@ export const SlideBarListItems = () => {
       //   name: "dashboard",
       // },
       {
-        id: "leftbar-listItem-8",
+        id: "leftbar-listItem-17",
         listName: "Medical Records",
         icon: <BookmarksIcon />,
         link: "/medicalRecord",
@@ -195,35 +195,35 @@ export const SlideBarListItems = () => {
   } else if (userType === "Admin") {
     listItems = [
       {
-        id: "leftbar-listItem-9",
+        id: "leftbar-listItem-18",
         listName: "Dashboard",
         icon: <BookmarksIcon />,
         link: "/dashboard",
         name: "dashboard",
       },
       {
-        id: "leftbar-listItem-10",
+        id: "leftbar-listItem-19",
         listName: "All Doctors",
         icon: <BookmarksIcon />,
         link: "/doctor",
         name: "dashboard",
       },
       {
-        id: "leftbar-listItem-10",
+        id: "leftbar-listItem-20",
         listName: "All Patients",
         icon: <BookmarksIcon />,
         link: "/patient",
         name: "dashboard",
       },
       {
-        id: "leftbar-listItem-10",
+        id: "leftbar-listItem-21",
         listName: "All Pharmacist",
         icon: <BookmarksIcon />,
         link: "/pharmacist",
         name: "dashboard",
       },
       {
-        id: "leftbar-listItem-10",
+        id: "leftbar-listItem-22",
         listName: "All News",
         icon: <BookmarksIcon />,
         link: "/news",
