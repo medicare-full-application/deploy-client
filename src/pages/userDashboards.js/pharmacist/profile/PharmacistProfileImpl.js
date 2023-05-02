@@ -87,11 +87,11 @@ export const PharmacistProfileImpl = () => {
               Back
             </Button>
           </Grid>
-          <Grid item xs={1}>
+          {/* <Grid item xs={1}>
             <Button variant="contained" href="/profileUpdate">
               Update
             </Button>
-          </Grid>
+          </Grid> */}
         </Grid>
         <Stack
           direction="row"

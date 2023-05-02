@@ -22,6 +22,7 @@ import {
   getDownloadURL,
 } from "firebase/storage";
 import app from "../../../../firebase";
+import { useNavigate } from "react-router";
 
 export const DoctorProfileImpl = () => {
   const [loading, setLoading] = useState(false);
@@ -33,6 +34,8 @@ export const DoctorProfileImpl = () => {
   const token = useSelector((state) => state.user.token);
 
   const dispatch = useDispatch();
+
+  const navigate = useNavigate();
 
   const updateProductSubmit = async (e) => {
     e.preventDefault();
@@ -161,6 +164,18 @@ export const DoctorProfileImpl = () => {
     }
   };
 
+  const clickBackButton = () => {
+    if (userType == "Doctor") {
+      navigate("/doctorDashboard");
+    } else if (userType == "Patient") {
+      navigate("/patientDashboard");
+    } else if (userType == "Pharmacist") {
+      navigate("/pharmacistDashboard");
+    } else if (userType == "Admin") {
+      navigate("/dashboard");
+    }
+  }
+
   return (
     <Box
       component="form"
@@ -178,9 +193,9 @@ export const DoctorProfileImpl = () => {
           <Grid item xs={1}>
             <Button
               variant="contained"
-              href="/doctorDashboard"
               style={{ marginRight: 10 }}
               color="third"
+              onClick={clickBackButton}
               // endIcon={<AddIcon />}
             >
               Back
