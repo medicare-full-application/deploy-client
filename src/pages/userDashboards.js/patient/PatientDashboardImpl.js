@@ -14,6 +14,8 @@ import { getNews } from "../../../redux/newsApiCalls";
 import Footer from "./footer/Footer";
 import { removeDoctorUsers } from "../../../redux/userRedux";
 import { getDoctorUsers } from "../../../redux/userApiCalls"; 
+import { removeMedicalRecords } from "../../../redux/medicalRecordRedux";
+import { getMedicalRecord } from "../../../redux/medicalRecordApiCalls";
 
 export const PatientDashboardImpl = () => {
   const dispatch = useDispatch();
@@ -67,6 +69,21 @@ export const PatientDashboardImpl = () => {
     getDataFromDB();
   }, [loading2, deleteTrigger]);
 
+  useEffect(() => {
+    const getDataFromDB = async () => {
+      dispatch(removeMedicalRecords());
+      const result = await getMedicalRecord(dispatch, token);
+      if (result) {
+        console.log("Get user data success");
+        setTrigger(trigger + "s");
+        setLoading3(false);
+      } else {
+        console.log("Get user data unsuccess");
+      }
+    };
+    getDataFromDB();
+  }, [loading3, deleteTrigger]);
+
   const mainFeaturedPost = {
     title: "Hiii..." + currentUser.firstName + " " + currentUser.lastName,
     description:
@@ -79,7 +96,7 @@ export const PatientDashboardImpl = () => {
 
   return (
     <div>
-      {(!loading1 && !loading2) && (
+      {(!loading1 && !loading2 && !loading3) && (
         <>
           <MainFeaturedPost post={mainFeaturedPost} />
           <Grid container spacing={4}>
