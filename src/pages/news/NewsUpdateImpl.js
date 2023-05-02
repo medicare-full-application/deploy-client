@@ -1,6 +1,6 @@
 import React from "react";
 import "../user/UserUpdateImpl.css";
-import { Link, useLocation } from "react-router-dom";
+import { Link, Navigate, useLocation } from "react-router-dom";
 import Charts from "../../components/charts/Charts";
 import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,11 +11,7 @@ import { Button } from "@mui/material";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
-import { getUsers, updateNormalUser } from "../../redux/userApiCalls";
-import {
-  getMedicalRecord,
-  updateMedicalRecord,
-} from "../../redux/medicalRecordApiCalls";
+import { useNavigate } from "react-router-dom";
 import { getNews, updateNews } from "../../redux/newsApiCalls";
 
 export const NewsUpdateImpl = () => {
@@ -44,6 +40,8 @@ export const NewsUpdateImpl = () => {
     useState("");
 
   const dispatch = useDispatch();
+
+  const navigate = useNavigate();
 
   const token = useSelector((state) => state.user.token);
   const userId = useSelector((state) => state.user.currentUser.user_id);
@@ -131,6 +129,14 @@ export const NewsUpdateImpl = () => {
     }
   };
 
+  const goToBack = () => {
+    navigate("/news");
+  }
+  
+  const goToCreate = () => {
+    navigate("/news/create");
+  }
+
   return (
     <div>
       <div className="productTitleContainer">
@@ -138,7 +144,7 @@ export const NewsUpdateImpl = () => {
         <div>
           <Button
             variant="contained"
-            href="/news"
+            onClick={goToBack}
             style={{ marginRight: 10 }}
             color="third"
             // endIcon={<AddIcon />}
@@ -149,7 +155,7 @@ export const NewsUpdateImpl = () => {
           {/* <button className="color-contained-button">Create</button> */}
           <Button
             variant="contained"
-            href="/news/create"
+            onClick={goToCreate}
             color="secondary"
             // endIcon={<AddIcon />}
           >
