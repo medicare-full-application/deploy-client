@@ -7,6 +7,8 @@ import FeaturedInfo from "../../../components/featuredInfo/FeaturedInfo";
 import Charts from "../../../components/charts/Charts";
 import "./Pharmacist.css";
 import MainFeaturedPost from "../patient/patientList/MainFeaturedPost";
+import { removeMedicalRecords } from "../../../redux/medicalRecordRedux";
+import { getMedicalRecord } from "../../../redux/medicalRecordApiCalls";
 
 export const PharmacistDashboardImpl = () => {
   const [userStats, setUserStats] = useState([]);
@@ -45,49 +47,19 @@ export const PharmacistDashboardImpl = () => {
     []
   );
 
-  // useEffect(() => {
-  //   const getCountInventoryData = async () => {
-  //     const result1 = await getUsersDummy(dispatch, token);
-  //     if (result1) {
-  //       setOther(result1.length);
-  //       console.log("Success");
-  //       setLoading1(false);
-  //     } else {
-  //       console.log("Unsuccess");
-  //     }
-  //   };
-  //   getCountInventoryData();
-  // }, []);
-
-  // useEffect(() => {
-  //   const getCountInventoryData = async () => {
-  //     const result2 = await getAdminUsersDummy(dispatch, token);
-  //     if (result2) {
-  //       console.log(result2.length);
-  //       console.log(admin);
-  //       setAdmin(result2.length);
-  //       console.log("Success");
-  //       setLoading2(false);
-  //     } else {
-  //       console.log("Unsuccess");
-  //     }
-  //   };
-  //   getCountInventoryData();
-  // }, []);
-
-  // useEffect(() => {
-  //   const getCountInventoryData = async () => {
-  //     const result = await getEventDummy(dispatch, token);
-  //     if (result) {
-  //       setEvent(result.length);
-  //       setLoading3(false);
-  //       console.log("Success");
-  //     } else {
-  //       console.log("Unsuccess");
-  //     }
-  //   };
-  //   getCountInventoryData();
-  // }, []);
+  useEffect(() => {
+    const getDataFromDB = async () => {
+      dispatch(removeMedicalRecords());
+      const result = await getMedicalRecord(dispatch, token);
+      if (result) {
+        console.log("Get user data success");
+        setLoading3(false);
+      } else {
+        console.log("Get user data unsuccess");
+      }
+    };
+    getDataFromDB();
+  }, [loading3]);
 
   let featureData = [
     {
@@ -143,29 +115,22 @@ export const PharmacistDashboardImpl = () => {
 
   return (
     <div>
-      {/* {loading1 && loading2 && loading3 ? (
+      {loading3 ? (
         <Box sx={{ width: "100%" }}>
           <LinearProgress />
         </Box>
       ) : (
-        <FeaturedInfo data={featureData} />
-      )} */}
+        <>
+          <MainFeaturedPost post={mainFeaturedPost} />
 
-      <MainFeaturedPost post={mainFeaturedPost} />
+          <FeaturedInfo data={featureData} />
 
-      <FeaturedInfo data={featureData} />
-
-      <div className="image-chart ">
-        {/* <img src="https://res.cloudinary.com/midefulness/image/upload/v1682622259/medicare/9835_fs1qfl.jpg" alt="pharmacy" />
-        <div class="center"></div> */}
-      </div>
-      {/* <Charts
-        data={userStats}
-        title="Users Analytics"
-        grid
-        dataKey1="User"
-        dataKey2="Admin"
-      /> */}
+          <div className="image-chart ">
+            {/* <img src="https://res.cloudinary.com/midefulness/image/upload/v1682622259/medicare/9835_fs1qfl.jpg" alt="pharmacy" />
+  <div class="center"></div> */}
+          </div>
+        </>
+      )}
     </div>
   );
 };

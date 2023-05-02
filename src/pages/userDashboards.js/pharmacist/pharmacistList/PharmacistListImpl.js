@@ -100,32 +100,6 @@ export const PharmacistListImpl = () => {
       let pharmacyNote = null;
       let medicalRecordId = null;
       pharmacistUsers.map(async (item) => {
-        //   const isoDateString = item.dateOfBirth;
-        //   const dateOnlyString = isoDateString.substring(0, 10);
-
-        //   if (userType == "Doctor") {
-        //     item.requests.map((request) => {
-        //       if (request.doctorId === userId) {
-        //         flag = true;
-        //         doctorIDData = request.doctorId;
-        //         isRequest = request.isRequest;
-        //       }
-        //     });
-        //   }
-
-        //   if (userType == "Pharmacist") {
-        //     medicalRecords.map((medicalRecordData) => {
-        //       if (item._id == medicalRecordData.recordFor) {
-        //         prescription = medicalRecordData.prescription;
-        //         pharmacyNote = medicalRecordData.pharmacyNote;
-        //         medicalRecordId = medicalRecordData._id;
-        //         console.log(prescription);
-        //         console.log(typeof prescription);
-        //         console.log(typeof medicalRecordData.prescription);
-        //       }
-        //     });
-        //   }
-
         await rowData.push({
           id: item._id,
           pharmacyName: item.pharmacyName,

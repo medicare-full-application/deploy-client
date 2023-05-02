@@ -8,8 +8,12 @@ import Charts from "../../../components/charts/Charts";
 import {
   getMonthlyIncomeFromDoctor,
   getTotalIncomeFromDoctor,
+  getUsers,
 } from "../../../redux/userApiCalls";
 import MainFeaturedPost from "../patient/patientList/MainFeaturedPost";
+import { removeMedicalRecords } from "../../../redux/medicalRecordRedux";
+import { getMedicalRecord } from "../../../redux/medicalRecordApiCalls";
+import { removeOtherUsers } from "../../../redux/userRedux";
 
 export const DoctorDashboardImpl = () => {
   const [userStats, setUserStats] = useState([]);
@@ -100,19 +104,33 @@ export const DoctorDashboardImpl = () => {
     getCountInventoryData();
   }, []);
 
-  // useEffect(() => {
-  //   const getCountInventoryData = async () => {
-  //     const result = await getEventDummy(dispatch, token);
-  //     if (result) {
-  //       setEvent(result.length);
-  //       setLoading3(false);
-  //       console.log("Success");
-  //     } else {
-  //       console.log("Unsuccess");
-  //     }
-  //   };
-  //   getCountInventoryData();
-  // }, []);
+  useEffect(() => {
+    const getDataFromDB = async () => {
+      dispatch(removeMedicalRecords());
+      const result = await getMedicalRecord(dispatch, token);
+      if (result) {
+        console.log("Get user data success");
+        setLoading3(false);
+      } else {
+        console.log("Get user data unsuccess");
+      }
+    };
+    getDataFromDB();
+  }, [loading3]);
+
+  useEffect(() => {
+    const getDataFromDB = async () => {
+      dispatch(removeOtherUsers());
+      const result = await getUsers("Patient", dispatch, token);
+      if (result) {
+        console.log("Get user data success");
+        setLoading1(false);
+      } else {
+        console.log("Get user data unsuccess");
+      }
+    };
+    getDataFromDB();
+  }, [loading1]);
 
   let featureData = [
     {
@@ -157,25 +175,25 @@ export const DoctorDashboardImpl = () => {
 
   return (
     <div>
-      {/* {loading1 && loading2 ? (
+      {loading1 && loading3 ? (
         <Box sx={{ width: "100%" }}>
           <LinearProgress />
         </Box>
       ) : (
-        <FeaturedInfo data={featureData} />
-      )} */}
+        <>
+          <MainFeaturedPost post={mainFeaturedPost} />
 
-      <MainFeaturedPost post={mainFeaturedPost} />
+          <FeaturedInfo data={featureData} />
 
-      <FeaturedInfo data={featureData} />
-
-      <Charts
-        data={userStats}
-        title="Patient Analytics"
-        grid
-        dataKey1="User"
-        dataKey2="Admin"
-      />
+          <Charts
+            data={userStats}
+            title="Patient Analytics"
+            grid
+            dataKey1="User"
+            dataKey2="Admin"
+          />
+        </>
+      )}
     </div>
   );
 };

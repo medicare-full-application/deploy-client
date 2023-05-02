@@ -8,6 +8,10 @@ import Box from "@mui/material/Box";
 import { removeMedicalRecords } from "../redux/medicalRecordRedux";
 import { getMedicalRecord } from "../redux/medicalRecordApiCalls";
 import MainFeaturedPost from "./userDashboards.js/patient/patientList/MainFeaturedPost";
+import { getNews } from "../redux/newsApiCalls";
+import { removeNews } from "../redux/newsRedux";
+import { removeDoctorUsers, removePharmacistUsers } from "../redux/userRedux";
+import { getDoctorUsers, getPharmacistUsers } from "../redux/userApiCalls";
 
 export const DashboardImpl = () => {
   const [userStats, setUserStats] = useState([]);
@@ -17,6 +21,8 @@ export const DashboardImpl = () => {
   const [loading1, setLoading1] = useState(true);
   const [loading2, setLoading2] = useState(true);
   const [loading3, setLoading3] = useState(true);
+  const [loading4, setLoading4] = useState(true);
+  const [loading5, setLoading5] = useState(true);
   const [featuredData, setFeaturedData] = useState([]);
   const dispatch = useDispatch();
   const token = useSelector((state) => state.user.token);
@@ -56,79 +62,48 @@ export const DashboardImpl = () => {
     getDataFromDB();
   }, [loading1]);
 
-  // useEffect(() => {
-  //   const getCountInventoryData = async () => {
-  //     const result1 = await getUsersDummy(dispatch, token);
-  //     if (result1) {
-  //       setOther(result1.length);
-  //       console.log("Success");
-  //       setLoading1(false);
-  //     } else {
-  //       console.log("Unsuccess");
-  //     }
-  //   };
-  //   getCountInventoryData();
-  // }, []);
+  useEffect(() => {
+    const getDataFromDB = async () => {
+      dispatch(removeNews());
+      const result = await getNews(dispatch, token);
+      if (result) {
+        console.log("Get user data success");
+        // setTrigger(trigger + "s");
+        setLoading2(false);
+      } else {
+        console.log("Get user data unsuccess");
+      }
+    };
+    getDataFromDB();
+  }, [loading2]);
 
-  // useEffect(() => {
-  //   const getCountInventoryData = async () => {
-  //     const result2 = await getAdminUsersDummy(dispatch, token);
-  //     if (result2) {
-  //       console.log(result2.length);
-  //       console.log(admin);
-  //       setAdmin(result2.length);
-  //       console.log("Success");
-  //       setLoading2(false);
-  //     } else {
-  //       console.log("Unsuccess");
-  //     }
-  //   };
-  //   getCountInventoryData();
-  // }, []);
+  useEffect(() => {
+    const getDataFromDB = async () => {
+      dispatch(removeDoctorUsers());
+      const result = await getDoctorUsers(dispatch, token);
+      if (result) {
+        console.log("Get user data success");
+        setLoading3(false);
+      } else {
+        console.log("Get user data unsuccess");
+      }
+    };
+    getDataFromDB();
+  }, [loading3]);
 
-  // useEffect(() => {
-  //   const getCountInventoryData = async () => {
-  //     const result = await getEventDummy(dispatch, token);
-  //     if (result) {
-  //       setEvent(result.length);
-  //       setLoading3(false);
-  //       console.log("Success");
-  //     } else {
-  //       console.log("Unsuccess");
-  //     }
-  //   };
-  //   getCountInventoryData();
-  // }, []);
-
-  let featureData = [
-    {
-      index: 1,
-      title: "No of Users",
-      // number: other,
-      number: 15,
-      // percentage: -1.4,
-      isDowngrade: false,
-      // text: "Compared to last month",
-    },
-    {
-      index: 2,
-      title: "No of Events",
-      // number: event,
-      number: 86,
-      // percentage: +1.4,
-      isDowngrade: true,
-      // text: "Compared to last month",
-    },
-    {
-      index: 3,
-      title: "No of Admin Users",
-      // number: admin,
-      number: 89,
-      // percentage: -1.4,
-      isDowngrade: false,
-      // text: "Compared to last month",
-    },
-  ];
+  useEffect(() => {
+    const getDataFromDB = async () => {
+      dispatch(removePharmacistUsers());
+      const result = await getPharmacistUsers(dispatch, token);
+      if (result) {
+        setLoading4(false);
+        console.log("Get user data success");
+      } else {
+        console.log("Get user data unsuccess");
+      }
+    };
+    getDataFromDB();
+  }, [loading4]);
 
   useEffect(() => {
     let data = [
@@ -156,25 +131,23 @@ export const DashboardImpl = () => {
 
   return (
     <div>
-      {/* {loading1 && loading2 && loading3 ? (
+      {loading1 && loading2 && loading3 ? (
         <Box sx={{ width: "100%" }}>
           <LinearProgress />
         </Box>
       ) : (
-        <FeaturedInfo data={featureData} />
-      )} */}
+        <>
+          <MainFeaturedPost post={mainFeaturedPost} />
 
-      <MainFeaturedPost post={mainFeaturedPost} />
-
-      {/* <FeaturedInfo data={featureData} /> */}
-
-      <Charts
-        data={userStats}
-        title="Users Analytics"
-        grid
-        dataKey1="User"
-        dataKey2="Admin"
-      />
+          <Charts
+            data={userStats}
+            title="Users Analytics"
+            grid
+            dataKey1="User"
+            dataKey2="Admin"
+          />
+        </>
+      )}
     </div>
   );
 };
