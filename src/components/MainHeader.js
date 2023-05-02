@@ -56,8 +56,7 @@ export default function MainHeader(props) {
   //   checkUserExist();
   // }, []);
   if (userToken === null) {
-    // navigate("/");
-    window.location.href = "/";
+    navigate("/");
   }
 
   const changeProfile = () => {
@@ -86,7 +85,7 @@ export default function MainHeader(props) {
             >
               <MenuIcon />
             </IconButton>
-            <IconButton onClick={changeProfile}>
+            <IconButton>
               <img
                 src="https://res.cloudinary.com/midefulness/image/upload/v1682622260/medicare/Logo_2_taiafd.png"
                 alt="logo"

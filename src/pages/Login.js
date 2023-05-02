@@ -49,13 +49,13 @@ export default function Login() {
   React.useEffect(() => {
     const checkUserExist = () => {
       if (!(token == null)) {
-        if (userType === "Doctor") {
+        if (userType == "Doctor") {
           navigate("/doctorDashboard");
-        } else if (userType === "Patient") {
+        } else if (userType == "Patient") {
           navigate("/patientDashboard");
-        } else if (userType === "Pharmacist") {
+        } else if (userType == "Pharmacist") {
           navigate("/pharmacistDashboard");
-        } else if (userType === "Admin") {
+        } else if (userType == "Admin") {
           navigate("/dashboard");
         }
       }
