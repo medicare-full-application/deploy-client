@@ -134,13 +134,17 @@ export const NewsCreateImpl = () => {
     console.log(formData);
   };
 
+  const goToBack = () => {
+    navigate("/news");
+  }
+
   return (
     <Grid container direction="column">
       <Grid container direction="row" justifyContent="space-between">
         <Grid item xs={6}>
           <Typography variant="h3">Add News</Typography>
         </Grid>
-        <Button variant="contained" color="third" href="/news" startIcon={<ArrowBackIcon />}>
+        <Button variant="contained" color="third" onClick={goToBack} startIcon={<ArrowBackIcon />}>
           Back
         </Button>
       </Grid>

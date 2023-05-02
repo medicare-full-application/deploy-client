@@ -216,6 +216,11 @@ export const NewsListImpl = () => {
       },
     },
   ];
+
+  const goToBack = () => {
+    navigate("/news/create");
+  }
+
   return (
     <>
       <Box
@@ -243,7 +248,7 @@ export const NewsListImpl = () => {
 
               <Button
                 variant="contained"
-                href="/news/create"
+                onClick={goToBack}
                 color="secondary"
                 endIcon={<AddIcon />}
               >
