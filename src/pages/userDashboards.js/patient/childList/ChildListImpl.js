@@ -305,6 +305,10 @@ export const ChildListImpl = () => {
     });
   };
 
+  const goToBack = () => {
+    navigate(`/patient`);
+  };
+
   const createMedicalRecord = (id) => {
     console.log(id);
     navigate(`/createMedicalRecord/${id}`);
@@ -462,14 +466,16 @@ export const ChildListImpl = () => {
                 <h2>Patient Children</h2>
               </div>
               <div>
-                <Button
-                  variant="contained"
-                  color="third"
-                  href="/patient"
-                  startIcon={<ArrowBackIcon />}
-                >
-                  Back
-                </Button>
+                {userType != "Patient" && (
+                  <Button
+                    variant="contained"
+                    color="third"
+                    onClick={goToBack}
+                    startIcon={<ArrowBackIcon />}
+                  >
+                    Back
+                  </Button>
+                )}
               </div>
 
               {/* <Button variant="contained">Contained1</Button> */}
