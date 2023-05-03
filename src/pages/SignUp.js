@@ -271,7 +271,7 @@ export default function SignUp() {
           user: {
             email: data.get("email"),
             password: data.get("password"),
-            userType: userType,
+            userType: "Pharmacist",
             userStatus: true,
           },
           pharmacist,
