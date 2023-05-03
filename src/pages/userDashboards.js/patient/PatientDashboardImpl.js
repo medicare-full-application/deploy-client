@@ -12,8 +12,8 @@ import FeaturedPostRight from "./featurePost/FeaturedPostRight";
 import { removeNews } from "../../../redux/newsRedux";
 import { getNews } from "../../../redux/newsApiCalls";
 import Footer from "./footer/Footer";
-import { removeDoctorUsers } from "../../../redux/userRedux";
-import { getDoctorUsers } from "../../../redux/userApiCalls"; 
+import { removeDoctorUsers, removeOtherUsers } from "../../../redux/userRedux";
+import { getDoctorUsers, getUsers } from "../../../redux/userApiCalls"; 
 import { removeMedicalRecords } from "../../../redux/medicalRecordRedux";
 import { getMedicalRecord } from "../../../redux/medicalRecordApiCalls";
 
@@ -34,6 +34,7 @@ export const PatientDashboardImpl = () => {
   const [loading1, setLoading1] = useState(true);
   const [loading2, setLoading2] = useState(true);
   const [loading3, setLoading3] = useState(true);
+  const [loading4, setLoading4] = useState(true);
   const [featuredData, setFeaturedData] = useState([]);
 
   const currentUser = useSelector((state) => state.user.currentUser);;
@@ -84,6 +85,20 @@ export const PatientDashboardImpl = () => {
     getDataFromDB();
   }, [loading3, deleteTrigger]);
 
+  useEffect(() => {
+    const getDataFromDB = async () => {
+      dispatch(removeOtherUsers());
+      const result = await getUsers("Patient", dispatch, token);
+      if (result) {
+        console.log("Get user data success");
+        setLoading4(false);
+      } else {
+        console.log("Get user data unsuccess");
+      }
+    };
+    getDataFromDB();
+  }, [loading4]);
+
   const mainFeaturedPost = {
     title: "Hiii..." + currentUser.firstName + " " + currentUser.lastName,
     description:
@@ -96,7 +111,7 @@ export const PatientDashboardImpl = () => {
 
   return (
     <div>
-      {(!loading1 && !loading2 && !loading3) && (
+      {(!loading1 && !loading2 && !loading3 && !loading4) && (
         <>
           <MainFeaturedPost post={mainFeaturedPost} />
           <Grid container spacing={4}>
