@@ -356,7 +356,8 @@ export const PatientListImpl = () => {
 
   const createMedicalRecord = (id) => {
     console.log(id);
-    navigate(`/createMedicalRecord/${id}`);
+    // navigate(`/createMedicalRecord/${id}`);
+    navigate(`/patient/recordList/${id}`);
   };
 
   const changeItem = (parentId) => {
@@ -555,7 +556,7 @@ export const PatientListImpl = () => {
                     //   endIcon={<AddIcon />}
                     onClick={() => createMedicalRecord(params.row.id)}
                   >
-                    Add a record
+                    View Medical Records
                   </Button>
                 </Stack>
               ) : params.row.isRequest == "Decline" ? (

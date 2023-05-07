@@ -29,6 +29,7 @@ import { ChildList } from "./pages/userDashboards.js/patient/childList/ChildList
 import ForgetPassword from "./pages/forgetPassword.js/ForgetPassword";
 import ValidationPage from "./pages/forgetPassword.js/ValidationPage";
 import UpdatePassword from "./pages/forgetPassword.js/UpdatePassword";
+import { MedicalRecordListDoctor } from "./pages/medicalRecord/medicalRecordDoctor/MedicalRecordListDoctor";
 
 function App() {
   const theme = createTheme({
@@ -88,6 +89,7 @@ function App() {
           <Route path="/pharmacistDashboard" element={<PharmacistDashboard />} />
           {/* user */}
           <Route path="/patient" element={<PatientList />} />
+          <Route path="/patient/recordList/:id" element={<MedicalRecordListDoctor />} />
           <Route path="/addChild" element={<AddChild />} />
           <Route path="/patient/child/:id" element={<ChildList />} />
           <Route path="/createUser" element={<UserCreate />} />
