@@ -33,6 +33,7 @@ import Swal from "sweetalert2";
 import SendIcon from "@mui/icons-material/Send";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { removeOtherUsers } from "../../../../redux/userRedux";
+import { v4 as uuidv4 } from 'uuid';
 
 export default function AddChildImpl() {
   const [value, setValue] = React.useState(0);
@@ -61,6 +62,7 @@ export default function AddChildImpl() {
   const currentUser = useSelector((state) => state.user.currentUser);
   const userType = useSelector((state) => state.user.userType);
   const token = useSelector((state) => state.user.token);
+  const uuid = uuidv4();
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -87,33 +89,24 @@ export default function AddChildImpl() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
-    console.log(data.get("email"));
 
     if (!data.get("firstName")) {
       setFirstNameError(true);
     } else if (!data.get("lastName")) {
       setLastNameError(true);
-    } else if (!data.get("email")) {
-      setEmailError(true);
     } else if (!data.get("dateOfBirth")) {
       setDobError(true);
-    } else if (!data.get("password")) {
-      setPasswordError(true);
     } else {
       //     let childrenIdList = childrenIds.push(); //write new endpoint
       //   let patient = {inputs, "childrenId":[]};
-      let patient = {...inputs, address:currentUser.address, contactNo: currentUser.contactNo};
+      let patient = {...inputs, email: uuid+"@gmail.com", userStatus:false, address:currentUser.address, contactNo: currentUser.contactNo};
       const userData = {
-        user: {
-          email: data.get("email"),
-          password: data.get("password"),
-          userType: userType,
-          userStatus: true,
-        },
+        // user: {
+        //   email: uuid+"@gmail.com",
+        //   password: 123,
+        //   userType: userType,
+        //   userStatus: true,
+        // },
         patient, //childrenId
       };
       console.log(userData);
@@ -226,7 +219,7 @@ export default function AddChildImpl() {
                   }}
                 />
               </Grid>
-              <Grid item xs={6}>
+              {/* <Grid item xs={6}>
                 <TextField
                   error={emailError}
                   required
@@ -240,7 +233,7 @@ export default function AddChildImpl() {
                     handleChangeData(e);
                   }}
                 />
-              </Grid>
+              </Grid> */}
               {/* <Grid item xs={6}>
                 <TextField
                   error={addressError}
@@ -306,7 +299,7 @@ export default function AddChildImpl() {
                 />
               </Grid> */}
 
-              <Grid item xs={6}>
+              {/* <Grid item xs={6}>
                 <FormControl sx={{ width: "100%" }} variant="outlined">
                   <InputLabel htmlFor="password" name="password" id="password">
                     Password
@@ -335,7 +328,7 @@ export default function AddChildImpl() {
                     }}
                   />
                 </FormControl>
-              </Grid>
+              </Grid> */}
             </Grid>
             <Grid
               item

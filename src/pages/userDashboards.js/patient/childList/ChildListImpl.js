@@ -422,7 +422,7 @@ export const ChildListImpl = () => {
       },
     },
 
-    { field: "col8", headerName: "Email", width: 220 },
+    // { field: "col8", headerName: "Email", width: 220 },
     { field: "col6", headerName: "Address", width: 220 },
     { field: "col7", headerName: "Contact", width: 120 },
     {
