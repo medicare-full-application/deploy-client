@@ -13,7 +13,7 @@ import { removeNews } from "../../../redux/newsRedux";
 import { getNews } from "../../../redux/newsApiCalls";
 import Footer from "./footer/Footer";
 import { removeDoctorUsers, removeOtherUsers } from "../../../redux/userRedux";
-import { getDoctorUsers, getUsers } from "../../../redux/userApiCalls"; 
+import { getDoctorUsers, getUsers } from "../../../redux/userApiCalls";
 import { removeMedicalRecords } from "../../../redux/medicalRecordRedux";
 import { getMedicalRecord } from "../../../redux/medicalRecordApiCalls";
 
@@ -37,7 +37,7 @@ export const PatientDashboardImpl = () => {
   const [loading4, setLoading4] = useState(true);
   const [featuredData, setFeaturedData] = useState([]);
 
-  const currentUser = useSelector((state) => state.user.currentUser);;
+  const currentUser = useSelector((state) => state.user.currentUser);
 
   useEffect(() => {
     const getDataFromDB = async () => {
@@ -111,18 +111,22 @@ export const PatientDashboardImpl = () => {
 
   return (
     <div>
-      {(!loading1 && !loading2 && !loading3 && !loading4) && (
+      {!loading1 && !loading2 && !loading3 && !loading4 && (
         <>
           <MainFeaturedPost post={mainFeaturedPost} />
           <Grid container spacing={4}>
-            {newsData != null && newsData.map((post) => (
-              // featuredFlag ? (
-              //   <FeaturedPostLeft key={post._id} post={post} />
-              // ) : (
-              //   <FeaturedPostRight key={post._id} post={post} />
-              // )
-              <FeaturedPostLeft key={post._id} post={post} />
-            ))}
+            {newsData != null &&
+              newsData.map(
+                (post) =>
+                  // featuredFlag ? (
+                  //   <FeaturedPostLeft key={post._id} post={post} />
+                  // ) : (
+                  //   <FeaturedPostRight key={post._id} post={post} />
+                  // )
+                  post.isActivate && (
+                    <FeaturedPostLeft key={post._id} post={post} />
+                  )
+              )}
           </Grid>
           <Footer
             title="MediCare"
