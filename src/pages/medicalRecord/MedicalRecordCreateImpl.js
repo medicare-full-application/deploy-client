@@ -259,6 +259,7 @@ export const MedicalRecordCreateImpl = () => {
                   // defaultValue={employeeNo}
                   // variant="standard"
                   // disabled
+                  multiline
                   margin="normal"
                   required
                   fullWidth
@@ -329,7 +330,7 @@ export const MedicalRecordCreateImpl = () => {
                   }}
                 />
               </Grid>
-              <Grid item md={12}>
+              <Grid item md={sizeForm}>
                 <TextField
                   error={descriptionError}
                   // defaultValue={product.fullname}

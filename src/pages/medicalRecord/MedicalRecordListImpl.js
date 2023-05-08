@@ -284,17 +284,9 @@ export const MedicalRecordListImpl = () => {
   };
 
   const handleOpen = (id, prescription) => {
-    const splittedArr = prescription.split(" ");
-
-    let outputStr = "";
-    for (let i = 0; i < splittedArr.length; i += 2) {
-      outputStr += splittedArr[i] + " " + splittedArr[i + 1] + "\n";
-    }
-    console.log(outputStr);
     setOpen(true);
     setTitle("Prescription");
-    setContent(outputStr);
-    console.log(id);
+    setContent(prescription);
   };
   const handleClose = () => setOpen(false);
   const handleOpen1 = (id, pharmacyNote) => {

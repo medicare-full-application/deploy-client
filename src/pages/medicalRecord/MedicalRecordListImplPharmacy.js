@@ -237,17 +237,15 @@ export const MedicalRecordListImplPharmacy = () => {
   };
 
   const handleOpen = (id, prescription) => {
-    const splittedArr = prescription.split(" ");
+    // const splittedArr = prescription.split(" ");
 
-    let outputStr = "";
-    for (let i = 0; i < splittedArr.length; i += 2) {
-      outputStr += splittedArr[i] + " " + splittedArr[i + 1] + "\n";
-    }
-    console.log(outputStr);
+    // let outputStr = "";
+    // for (let i = 0; i < splittedArr.length; i += 2) {
+    //   outputStr += splittedArr[i] + " " + splittedArr[i + 1] + "\n";
+    // }
     setOpen(true);
     setTitle("Prescription");
-    setContent(outputStr);
-    console.log(id);
+    setContent(prescription);
   };
   const handleClose = () => setOpen(false);
 
