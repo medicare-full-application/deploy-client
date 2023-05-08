@@ -81,7 +81,7 @@ export const userRegister = async (userType, User) => {
     Swal.fire({
       icon: "error",
       title: "Oops...",
-      text: "User registration Failed!",
+      text:err.message,
     });
     return 0;
   }

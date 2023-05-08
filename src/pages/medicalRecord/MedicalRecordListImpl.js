@@ -161,6 +161,51 @@ export const MedicalRecordListImpl = () => {
           }
           // }
         );
+      } else if (userType == "Doctor") {
+        const filteredMedicalRecords = medicalRecords.filter(
+          (record) => record.recordBy == userId
+        );
+
+        console.log(filteredMedicalRecords);
+
+        filteredMedicalRecords.map(
+          (item) => {
+            const isoDateString = item.date;
+            const dateOnlyString = isoDateString.substring(0, 10);
+
+            let patientId = null;
+            let patientFirstName = null;
+            let patientLastName = null;
+            let patientImage = null;
+            let patientNIC = null;
+
+            otherUsers.map((patientData) => {
+              if (item.recordFor == patientData._id) {
+                patientId = patientData._id;
+                patientFirstName = patientData.firstName;
+                patientLastName = patientData.lastName;
+                patientImage = patientData.imageUrl;
+                patientNIC = patientData.NIC;
+              }
+            });
+
+            rowData.push({
+              id: item._id,
+              col1: item.medicalCondition,
+              col2: dateOnlyString,
+              col3: item.reportAdded,
+              col4: item.medicalReport,
+              col5: item.prescription,
+              pharmacyNote: item.pharmacyNote,
+              patientId: patientId,
+              patientFirstName: patientFirstName,
+              patientLastName: patientLastName,
+              patientImage: patientImage,
+              patientNIC: patientNIC,
+            });
+          }
+          // }
+        );
       } else {
         medicalRecords.map(
           (item) => {
