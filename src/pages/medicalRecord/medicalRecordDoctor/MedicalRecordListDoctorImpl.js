@@ -121,7 +121,7 @@ export const MedicalRecordListDoctorImpl = () => {
       let rowData = [];
       if (userType == "Patient") {
         const filteredMedicalRecords = medicalRecords.filter(
-          (record) => record.recordFor == userId
+          (record) => record.recordFor == patientId
         );
 
         console.log(filteredMedicalRecords);

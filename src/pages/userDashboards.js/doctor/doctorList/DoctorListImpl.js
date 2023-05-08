@@ -57,6 +57,7 @@ export const DoctorListImpl = () => {
   const [requestTrigger, setRequestTrigger] = useState("s");
   const token = useSelector((state) => state.user.token);
   const userId = useSelector((state) => state.user.currentUser._id);
+  const currentUser = useSelector((state) => state.user.currentUser);
   const userType = useSelector((state) => state.user.userType);
   const doctorUsers = useSelector((state) => state.user.doctorUsers);
   const otherUsers = useSelector((state) => state.user.otherUsers);
@@ -110,8 +111,26 @@ export const DoctorListImpl = () => {
 
       doctorUsers.map(async (item) => {
         let isRequest = "None";
+        let isRequestChild = "None";
+        let childId = null;
+
         const isoDateString = item.dateOfBirth;
         const dateOnlyString = isoDateString.substring(0, 10);
+
+        if (currentUser.haveChildren) {
+          currentUser.childrenIds.map((childrenId) => {
+            otherUsers.map((patient) => {
+              if (patient._id == childrenId) {
+                patient.requests.map((request) => {
+                  if (request.doctorId == item._id) {
+                    isRequestChild = request.isRequest;
+                    childId = patient._id;
+                  }
+                });
+              }
+            });
+          });
+        }
 
         if (userType == "Patient") {
           item.requests.map((request) => {
@@ -136,9 +155,13 @@ export const DoctorListImpl = () => {
           startTime: item.startTime,
           endTime: item.endTime,
           isRequest: isRequest,
+          isRequestChild: isRequestChild,
+          childId: childId,
         });
 
         isRequest = "None";
+        isRequestChild = "None";
+        childId = null;
       });
       setRows(rowData);
       console.log(rowData);
@@ -358,6 +381,53 @@ export const DoctorListImpl = () => {
     });
   };
 
+  const sendRequestToPatientChild = (id, childId, requestType) => {
+    const data = {
+      patientId: childId,
+      isRequest: requestType,
+    };
+
+    const patientData = {
+      doctorId: id,
+      isRequest: requestType,
+    };
+
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#378cbb",
+      cancelButtonColor: "#d33",
+      confirmButtonText: `Yes, ${requestType} Request!`,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const doctorRequestStatus = await doctorRequestToPatient(
+          id,
+          data,
+          dispatch,
+          token
+        );
+        const patientRequestStatus = await patientRequestToDoctor(
+          childId,
+          patientData,
+          dispatch,
+          token
+        );
+        if (doctorRequestStatus && patientRequestStatus) {
+          setRequestTrigger(trigger + "s");
+          Swal.fire("Request Sent!", "Request sent success.", "success");
+        } else {
+          Swal.fire(
+            "Request Can't Sent!",
+            "Request sent unsuccess.",
+            "warning"
+          );
+        }
+      }
+    });
+  };
+
   const columns = [
     // { field: "id", headerName: "User Id", width: 300 },
     { field: "col3", headerName: "NIC", width: 140 },
@@ -492,7 +562,7 @@ export const DoctorListImpl = () => {
               </Stack>
             ) : (
               <>
-                <Stack direction="row" alignItems="center" spacing={1}>
+                {/* <Stack direction="row" alignItems="center" spacing={1}>
                   <IconButton
                     aria-label="edit"
                     size="large"
@@ -501,7 +571,7 @@ export const DoctorListImpl = () => {
                   >
                     <AccessTimeIcon />
                   </IconButton>
-                </Stack>
+                </Stack> */}
                 {params.row.isRequest == "None" ? (
                   <Stack direction="row" alignItems="center" spacing={1}>
                     <Button variant="contained" size="small" color="blue">
@@ -560,6 +630,82 @@ export const DoctorListImpl = () => {
                   <></>
                 )}
               </>
+            )}
+          </>
+        );
+      },
+    },
+    {
+      field: "isRequestChild",
+      headerName: "Child Request",
+      width: 400,
+      renderCell: (params) => {
+        return (
+          <>
+            {currentUser.haveChildren && params.row.isRequestChild == "None" ? (
+              <Stack direction="row" alignItems="center" spacing={1}>
+                <Button variant="contained" size="small" color="blue">
+                  None
+                </Button>
+              </Stack>
+            ) : params.row.isRequestChild == "Sent" ? (
+              <Stack direction="row" alignItems="center" spacing={1}>
+                <Button
+                  variant="contained"
+                  size="small"
+                  color="third"
+                  onClick={() =>
+                    sendRequestToPatientChild(
+                      params.row.id,
+                      params.row.childId,
+                      "Accept"
+                    )
+                  }
+                >
+                  Accept the Request
+                </Button>
+
+                <Button
+                  variant="contained"
+                  size="small"
+                  color="red"
+                  onClick={() =>
+                    sendRequestToPatientChild(
+                      params.row.id,
+                      params.row.childId,
+                      "Decline"
+                    )
+                  }
+                >
+                  Decline the Request
+                </Button>
+              </Stack>
+            ) : params.row.isRequestChild == "Accept" ? (
+              <Stack direction="row" alignItems="center" spacing={1}>
+                <Button
+                  variant="contained"
+                  size="small"
+                  color="secondary"
+                  //   endIcon={<AddIcon />}
+                  // onClick={() => createMedicalRecord(params.row.id)}
+                >
+                  Already Accept
+                </Button>
+              </Stack>
+            ) : params.row.isRequestChild == "Decline" ? (
+              <Stack direction="row" alignItems="center" spacing={1}>
+                <Button
+                  variant="contained"
+                  size="small"
+                  color="danger"
+                  //   endIcon={<AddIcon />}
+                  // onClick={() => sendRequestToPatient(params.row.id)}
+                >
+                  Request Already Decline
+                </Button>
+              </Stack>
+            ) : (
+              <></>
             )}
           </>
         );
