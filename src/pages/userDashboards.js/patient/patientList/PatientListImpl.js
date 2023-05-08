@@ -106,14 +106,15 @@ export const PatientListImpl = () => {
   React.useEffect(() => {
     const getNormalUserData = async () => {
       let rowData = [];
-      let flag = false;
-      let doctorIDData = null;
-      let isRequest = "None";
 
-      let prescription = null;
-      let pharmacyNote = null;
-      let medicalRecordId = null;
       otherUsers.map(async (item) => {
+        let flag = false;
+        let doctorIDData = null;
+        let isRequest = "None";
+
+        let prescription = null;
+        let pharmacyNote = null;
+        let medicalRecordId = null;
         if (item.childOrNot == false) {
           const isoDateString = item.dateOfBirth;
           const dateOnlyString = isoDateString.substring(0, 10);

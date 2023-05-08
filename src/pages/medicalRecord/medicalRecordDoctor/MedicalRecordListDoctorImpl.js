@@ -440,7 +440,7 @@ export const MedicalRecordListDoctorImpl = () => {
                 </IconButton>
               </Stack>
             )}
-            {userType == "Patient" && (
+            {(userType == "Patient" || userType == "Doctor") && (
               <Stack direction="row" alignItems="center" spacing={1}>
                 <Tooltip title="Pharmacy Note">
                   <IconButton
@@ -503,7 +503,11 @@ export const MedicalRecordListDoctorImpl = () => {
   ];
 
   const goToBack = () => {
-    navigate("/patient");
+    if(userType == "Patient"){
+      navigate(`/patient/child/${userId}`);
+    }else {
+      navigate("/patient");
+    }
   };
 
   return (
@@ -536,15 +540,18 @@ export const MedicalRecordListDoctorImpl = () => {
               </div>
               <div>
                 <Stack direction="row" alignItems="center" spacing={1}>
-                  <Button
-                    variant="contained"
-                    // size="small"
-                    color="secondary"
-                    //   endIcon={<AddIcon />}
-                    onClick={createMedicalRecord}
-                  >
-                    Add a Record
-                  </Button>
+                  {userType == "Doctor" && (
+                    <Button
+                      variant="contained"
+                      // size="small"
+                      color="secondary"
+                      //   endIcon={<AddIcon />}
+                      onClick={createMedicalRecord}
+                    >
+                      Add a Record
+                    </Button>
+                  )}
+
                   <Button
                     variant="contained"
                     onClick={goToBack}

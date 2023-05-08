@@ -25,7 +25,8 @@ import {
   addDoctorUsersFailure,
   addPharmacistUsersStart,
   addPharmacistUsersSuccess,
-  addPharmacistUsersFailure
+  addPharmacistUsersFailure,
+  userGetPatientSuccess
 } from "./userRedux";
 import { publicRequest, userRequest } from "../requestMethods";
 import Swal from "sweetalert2";
@@ -91,6 +92,7 @@ export const userChildRegister = async (parentId, User) => {
   try {
     const res = await publicRequest.post(`/auth/register/child/${parentId}`, User);
     console.log(res);
+    userGetPatientSuccess(res.data);
     return 1;
   } catch (err) {
     Swal.fire({
@@ -108,6 +110,21 @@ export const login = async (dispatch, data) => {
   dispatch(loginStart());
   try {
     const res = await publicRequest.post("/auth/login", data);
+    console.log(res);
+    dispatch(loginSuccess(res.data));
+    return res.data;
+  } catch (err) {
+    dispatch(loginFailure());
+    return 0;
+  }
+};
+
+export const getCurrentUserData = async (dispatch, data) => {
+  // const userData = JSON.stringify(data);
+  console.log(data);
+  dispatch(loginStart());
+  try {
+    const res = await publicRequest.post("/auth/getCurrentUser", data);
     console.log(res);
     dispatch(loginSuccess(res.data));
     return res.data;

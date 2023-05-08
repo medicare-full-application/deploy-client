@@ -49,6 +49,12 @@ const userSlice = createSlice({
       state.doctorUsers = [];
       state.pharmacistUsers = [];
     },
+    userGetPatientSuccess: (state, action) => {
+      state.isFetching = false;
+      state.currentUser = action.payload;
+      //please set permissions
+      // state.authorities = action.payload.authorities;
+    },
     removeAdminUsers: (state) => {
       state.adminUsers = null;
     },
@@ -209,6 +215,7 @@ export const {
   addPharmacistUsersStart,
   addPharmacistUsersSuccess,
   addPharmacistUsersFailure,
-  removePharmacistUsers
+  removePharmacistUsers,
+  userGetPatientSuccess
 } = userSlice.actions;
 export default userSlice.reducer;

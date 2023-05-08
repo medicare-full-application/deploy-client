@@ -10,6 +10,7 @@ import Swal from "sweetalert2";
 import { useDispatch, useSelector } from "react-redux";
 import {
   doctorRequestToPatient,
+  getCurrentUserData,
   getUsers,
   patientRequestToDoctor,
 } from "../../../../redux/userApiCalls";
@@ -46,17 +47,20 @@ const style = {
 
 export const ChildListImpl = () => {
   const [loading, setLoading] = useState(true);
+  const [loading2, setLoading2] = useState(true);
   const [loadingRecord, setLoadingRecord] = useState(true);
   const [trigger, setTrigger] = useState("s");
   const [requestTrigger, setRequestTrigger] = useState("s");
   const token = useSelector((state) => state.user.token);
   const userId = useSelector((state) => state.user.currentUser._id);
+  const currentUser = useSelector((state) => state.user.currentUser);
   const childOrNot = useSelector((state) => state.user.currentUser.childOrNot);
   const userType = useSelector((state) => state.user.userType);
   const otherUsers = useSelector((state) => state.user.otherUsers);
   const medicalRecords = useSelector(
     (state) => state.medicalRecord.medicalRecords
   );
+  const patientId = window.location.pathname.split("/")[3];
   //   const [deleteTrigger, setDeleteTrigger] = React.useState("");
   const [open, setOpen] = React.useState(false);
 
@@ -99,68 +103,156 @@ export const ChildListImpl = () => {
   }, [loadingRecord, requestTrigger]);
 
   React.useEffect(() => {
+    const getDataFromDB = async () => {
+      // dispatch(removeMedicalRecords());
+      const loginData = {
+        email: currentUser.email,
+      };
+      console.log(loginData);
+      // navigate("/dashboard");
+      const result = await getCurrentUserData(dispatch, loginData);
+      if (result) {
+        console.log("Get user data success");
+        setTrigger(trigger + "s");
+        setLoading2(false);
+      } else {
+        console.log("Get user data unsuccess");
+      }
+    };
+    getDataFromDB();
+  }, [loading2, requestTrigger]);
+
+  React.useEffect(() => {
     const getNormalUserData = async () => {
       let rowData = [];
 
       otherUsers.map(async (item) => {
-        let flag = false;
-        let doctorIDData = null;
-        let isRequest = "None";
-
         let prescription = null;
         let pharmacyNote = null;
         let medicalRecordId = null;
-        if (item.childOrNot == true) {
-          const isoDateString = item.dateOfBirth;
-          const dateOnlyString = isoDateString.substring(0, 10);
 
-          if (userType == "Doctor") {
-            item.requests.map((request) => {
-              console.log(item);
-              console.log(request);
-              if (request.doctorId === userId) {
-                flag = true;
-                doctorIDData = request.doctorId;
-                isRequest = request.isRequest;
+        if (userType == "Patient") {
+          currentUser.childrenIds.map(async (childrenId) => {
+            let flag = false;
+            let doctorIDData = null;
+            let isRequest = "None";
+            if (childrenId == item._id) {
+              if (item.childOrNot == true) {
+                const isoDateString = item.dateOfBirth;
+                const dateOnlyString = isoDateString.substring(0, 10);
+
+                if (userType == "Doctor") {
+                  item.requests.map((request) => {
+                    console.log(item);
+                    console.log(request);
+                    if (request.doctorId === userId) {
+                      flag = true;
+                      doctorIDData = request.doctorId;
+                      isRequest = request.isRequest;
+                    }
+                  });
+                }
+
+                if (userType == "Pharmacist" || userType == "Patient") {
+                  medicalRecords.map((medicalRecordData) => {
+                    if (item._id == medicalRecordData.recordFor) {
+                      prescription = medicalRecordData.prescription;
+                      pharmacyNote = medicalRecordData.pharmacyNote;
+                      medicalRecordId = medicalRecordData._id;
+                      console.log(prescription);
+                      console.log(typeof prescription);
+                      console.log(typeof medicalRecordData.prescription);
+                    }
+                  });
+                }
+
+                await rowData.push({
+                  id: item._id,
+                  col1: item.firstName,
+                  col2: item.lastName,
+                  col3: item.NIC,
+                  col4: item.imageUrl,
+                  col5: item.haveChildren,
+                  col6: item.address,
+                  col7: item.contactNo,
+                  col8: item.email,
+                  col9: item.userStatus,
+                  col10: dateOnlyString,
+                  flag: item.flag,
+                  isRequest: isRequest,
+                  prescriptionNote: prescription,
+                  pharmacyNote: pharmacyNote,
+                  medicalRecordId: medicalRecordId,
+                });
+
+                //   prescription = null;
+                //   pharmacyNote = null;
+                //   medicalRecordId = null;
               }
-            });
-          }
-
-          if (userType == "Pharmacist" || userType == "Patient") {
-            medicalRecords.map((medicalRecordData) => {
-              if (item._id == medicalRecordData.recordFor) {
-                prescription = medicalRecordData.prescription;
-                pharmacyNote = medicalRecordData.pharmacyNote;
-                medicalRecordId = medicalRecordData._id;
-                console.log(prescription);
-                console.log(typeof prescription);
-                console.log(typeof medicalRecordData.prescription);
-              }
-            });
-          }
-
-          await rowData.push({
-            id: item._id,
-            col1: item.firstName,
-            col2: item.lastName,
-            col3: item.NIC,
-            col4: item.imageUrl,
-            col5: item.haveChildren,
-            col6: item.address,
-            col7: item.contactNo,
-            col8: item.email,
-            col9: item.userStatus,
-            col10: dateOnlyString,
-            flag: item.flag,
-            isRequest: isRequest,
-            prescriptionNote: prescription,
-            pharmacyNote: pharmacyNote,
-            medicalRecordId: medicalRecordId,
+            }
           });
+        } else {
+          if (item._id == patientId) {
+            otherUsers.map((patients) => {
+              item.childrenIds.map(async (childrenId) => {
+                let flag = false;
+                let doctorIDData = null;
+                let isRequest = "None";
+                if (childrenId == patients._id) {
+                  if (patients.childOrNot == true) {
+                    const isoDateString = patients.dateOfBirth;
+                    const dateOnlyString = isoDateString.substring(0, 10);
 
-          //   prescription = null;
-          //   pharmacyNote = null;
-          //   medicalRecordId = null;
+                    if (userType == "Doctor") {
+                      patients.requests.map((request) => {
+                        if (request.doctorId === userId) {
+                          flag = true;
+                          doctorIDData = request.doctorId;
+                          isRequest = request.isRequest;
+                        }
+                      });
+                    }
+
+                    if (userType == "Pharmacist" || userType == "Patient") {
+                      medicalRecords.map((medicalRecordData) => {
+                        if (patients._id == medicalRecordData.recordFor) {
+                          prescription = medicalRecordData.prescription;
+                          pharmacyNote = medicalRecordData.pharmacyNote;
+                          medicalRecordId = medicalRecordData._id;
+                          console.log(prescription);
+                          console.log(typeof prescription);
+                          console.log(typeof medicalRecordData.prescription);
+                        }
+                      });
+                    }
+
+                    await rowData.push({
+                      id: patients._id,
+                      col1: patients.firstName,
+                      col2: patients.lastName,
+                      col3: patients.NIC,
+                      col4: patients.imageUrl,
+                      col5: patients.haveChildren,
+                      col6: patients.address,
+                      col7: patients.contactNo,
+                      col8: patients.email,
+                      col9: patients.userStatus,
+                      col10: dateOnlyString,
+                      flag: patients.flag,
+                      isRequest: isRequest,
+                      prescriptionNote: prescription,
+                      pharmacyNote: pharmacyNote,
+                      medicalRecordId: medicalRecordId,
+                    });
+
+                    //   prescription = null;
+                    //   pharmacyNote = null;
+                    //   medicalRecordId = null;
+                  }
+                }
+              });
+            });
+          }
         }
       });
       setRows(rowData);
@@ -311,7 +403,8 @@ export const ChildListImpl = () => {
 
   const createMedicalRecord = (id) => {
     console.log(id);
-    navigate(`/createMedicalRecord/${id}`);
+    // navigate(`/createMedicalRecord/${id}`);
+    navigate(`/patient/recordList/${id}`);
   };
 
   const columns = [
@@ -350,7 +443,7 @@ export const ChildListImpl = () => {
     {
       field: "action",
       headerName: "Action",
-      width: 200,
+      width: 280,
       renderCell: (params) => {
         return (
           <>
@@ -388,7 +481,7 @@ export const ChildListImpl = () => {
                     //   endIcon={<AddIcon />}
                     onClick={() => createMedicalRecord(params.row.id)}
                   >
-                    Add a record
+                    View Medical Records
                   </Button>
                 </Stack>
               ) : params.row.isRequest == "Decline" ? (
@@ -418,6 +511,19 @@ export const ChildListImpl = () => {
                 >
                   <VisibilityIcon />
                 </IconButton>
+                {userType == "Patient" && (
+                  <Stack direction="row" alignItems="center" spacing={1}>
+                    <Button
+                      variant="contained"
+                      size="small"
+                      color="secondary"
+                      //   endIcon={<AddIcon />}
+                      onClick={() => createMedicalRecord(params.row.id)}
+                    >
+                      View medical Record
+                    </Button>
+                  </Stack>
+                )}
                 {userType == "Pharmacist" && (
                   <IconButton
                     aria-label="edit"
@@ -450,7 +556,7 @@ export const ChildListImpl = () => {
           bgcolor: "#FFF",
         }}
       >
-        {loading && loadingRecord ? (
+        {loading && loading2 && loadingRecord ? (
           <Box sx={{ width: "100%" }}>
             <LinearProgress />
           </Box>

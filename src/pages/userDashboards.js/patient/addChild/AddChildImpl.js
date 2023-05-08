@@ -38,7 +38,7 @@ export default function AddChildImpl() {
   const [value, setValue] = React.useState(0);
   const [showPassword, setShowPassword] = React.useState(false);
   const [inputs, setInputs] = React.useState({});
-  const [userType, setUserType] = React.useState("Doctor");
+  // const [userType, setUserType] = React.useState("Doctor");
 
   const [firstNameError, setFirstNameError] = React.useState(false);
   const [lastNameError, setLastNameError] = React.useState(false);
@@ -58,6 +58,8 @@ export default function AddChildImpl() {
   );
 
   const userId = useSelector((state) => state.user.currentUser._id);
+  const currentUser = useSelector((state) => state.user.currentUser);
+  const userType = useSelector((state) => state.user.userType);
   const token = useSelector((state) => state.user.token);
 
   const dispatch = useDispatch();
@@ -82,12 +84,6 @@ export default function AddChildImpl() {
     event.preventDefault();
   };
 
-  const handleChange = (event, newValue) => {
-    console.log(event.target.name);
-    setUserType(event.target.name);
-    setValue(newValue);
-    setInputs([]);
-  };
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -103,10 +99,6 @@ export default function AddChildImpl() {
       setLastNameError(true);
     } else if (!data.get("email")) {
       setEmailError(true);
-    } else if (!data.get("address")) {
-      setAddressError(true);
-    } else if (!data.get("contactNo")) {
-      setContactError(true);
     } else if (!data.get("dateOfBirth")) {
       setDobError(true);
     } else if (!data.get("password")) {
@@ -114,7 +106,7 @@ export default function AddChildImpl() {
     } else {
       //     let childrenIdList = childrenIds.push(); //write new endpoint
       //   let patient = {inputs, "childrenId":[]};
-      let patient = inputs;
+      let patient = {...inputs, address:currentUser.address, contactNo: currentUser.contactNo};
       const userData = {
         user: {
           email: data.get("email"),
@@ -249,7 +241,7 @@ export default function AddChildImpl() {
                   }}
                 />
               </Grid>
-              <Grid item xs={6}>
+              {/* <Grid item xs={6}>
                 <TextField
                   error={addressError}
                   required
@@ -278,7 +270,7 @@ export default function AddChildImpl() {
                     handleChangeData(e);
                   }}
                 />
-              </Grid>
+              </Grid> */}
               <Grid item xs={12} sm={6}>
                 <TextField
                   error={dobError}
