@@ -466,7 +466,7 @@ export const MedicalRecordListImpl = () => {
                 </IconButton>
               </Stack>
             )}
-            {userType == "Patient" || userType == "Doctor" && (
+            {(userType == "Patient" || userType == "Doctor") && (
               <Stack direction="row" alignItems="center" spacing={1}>
                 <Tooltip title="Pharmacy Note">
                   <IconButton
