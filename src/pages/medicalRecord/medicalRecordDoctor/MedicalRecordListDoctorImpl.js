@@ -28,6 +28,7 @@ import {
 import { removeDoctorUsers, removeOtherUsers } from "../../../redux/userRedux";
 import { getDoctorUsers, getUsers } from "../../../redux/userApiCalls";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import PreviewIcon from "@mui/icons-material/Preview";
 
 const style = {
   position: "absolute",
@@ -61,12 +62,14 @@ export const MedicalRecordListDoctorImpl = () => {
 
   const [open, setOpen] = React.useState(false);
   const [open1, setOpen1] = React.useState(false);
+  const [open2, setOpen2] = React.useState(false);
 
   //   const [deleteTrigger, setDeleteTrigger] = React.useState("");
   const [rows, setRows] = React.useState([]);
   const [title, setTitle] = React.useState(null);
   const [content, setContent] = React.useState(null);
   const [pharmacyNote, setPharmacyNote] = React.useState(null);
+  const [medicalCondition, setMedicalCondition] = React.useState(null);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -257,6 +260,12 @@ export const MedicalRecordListDoctorImpl = () => {
   };
   const handleClose1 = () => setOpen1(false);
 
+  const handleOpen2 = (id, medicalCondition) => {
+    setMedicalCondition(medicalCondition);
+    setOpen2(true);
+  };
+  const handleClose2 = () => setOpen2(false);
+
   const addNewNote = async (medicalRecordId, pharmacyNote) => {
     console.log(medicalRecordId);
 
@@ -356,10 +365,18 @@ export const MedicalRecordListDoctorImpl = () => {
       width: 150,
       renderCell: (params) => {
         return (
-          <div className="productListItem">
-            {/* <img className="productListImg" src={params.row.col10} alt="" /> */}
-            {params.row.col1}
-          </div>
+          <Stack direction="row" alignItems="center" spacing={1}>
+            <Tooltip title="Medical Condition">
+              <IconButton
+                aria-label="edit"
+                size="large"
+                color="blue"
+                onClick={() => handleOpen2(params.row.id, params.row.col1)}
+              >
+                <PreviewIcon />
+              </IconButton>
+            </Tooltip>
+          </Stack>
         );
       },
     },
@@ -452,52 +469,12 @@ export const MedicalRecordListDoctorImpl = () => {
         );
       },
     },
-    // {
-    //   field: "action",
-    //   headerName: "Action",
-    //   width: 250,
-    //   renderCell: (params) => {
-    //     return (
-    //       <>
-    //         <Stack direction="row" alignItems="center" spacing={1}>
-    //           <IconButton
-    //             aria-label="edit"
-    //             size="large"
-    //             color="success"
-    //             onClick={() => updateItem(params.row.id)}
-    //           >
-    //             <EditIcon />
-    //           </IconButton>
-
-    //           <IconButton
-    //             aria-label="delete"
-    //             size="large"
-    //             color="error"
-    //             onClick={() => deleteItem(params.row.id)}
-    //           >
-    //             <DeleteIcon />
-    //           </IconButton>
-
-    //           <Button
-    //             variant="contained"
-    //             color="secondary"
-    //             size="small"
-    //             endIcon={<AddIcon />}
-    //             onClick={() => createMedicalRecord(params.row.id)}
-    //           >
-    //             Create
-    //           </Button>
-    //         </Stack>
-    //       </>
-    //     );
-    //   },
-    // },
   ];
 
   const goToBack = () => {
-    if(userType == "Patient"){
+    if (userType == "Patient") {
       navigate(`/patient/child/${userId}`);
-    }else {
+    } else {
       navigate("/patient");
     }
   };
@@ -595,6 +572,27 @@ export const MedicalRecordListDoctorImpl = () => {
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
             <pre>
               {pharmacyNote ? pharmacyNote : "The pharmacy did not add a note."}
+            </pre>
+          </Typography>
+        </Box>
+      </Modal>
+
+      <Modal
+        open={open2}
+        onClose={handleClose2}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+        keepMounted
+      >
+        <Box sx={style}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            Medical Condition
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            <pre>
+              {medicalCondition
+                ? medicalCondition
+                : "There is no medical condition."}
             </pre>
           </Typography>
         </Box>

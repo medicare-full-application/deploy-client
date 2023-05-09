@@ -25,6 +25,8 @@ import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import { getDoctorUsers, getUsers } from "../../redux/userApiCalls";
 import { removeDoctorUsers, removeOtherUsers } from "../../redux/userRedux";
+import PreviewIcon from '@mui/icons-material/Preview';
+import Tooltip from "@mui/material/Tooltip";
 
 const style = {
   position: "absolute",
@@ -55,11 +57,14 @@ export const MedicalRecordListImplPharmacy = () => {
   );
 
   const [open, setOpen] = React.useState(false);
+  const [open1, setOpen1] = React.useState(false);
 
   //   const [deleteTrigger, setDeleteTrigger] = React.useState("");
   const [rows, setRows] = React.useState([]);
   const [title, setTitle] = React.useState(null);
+  const [title1, setTitle1] = React.useState(null);
   const [content, setContent] = React.useState(null);
+  const [content1, setContent1] = React.useState(null);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -249,6 +254,13 @@ export const MedicalRecordListImplPharmacy = () => {
   };
   const handleClose = () => setOpen(false);
 
+  const handleOpen1 = (id, medicalCondition) => {
+    setOpen1(true);
+    setTitle1("Medical Condition");
+    setContent1(medicalCondition);
+  };
+  const handleClose1 = () => setOpen1(false);
+
   const addNewNote = async (medicalRecordId, pharmacyNote) => {
     console.log(medicalRecordId);
 
@@ -335,10 +347,18 @@ export const MedicalRecordListImplPharmacy = () => {
       width: 150,
       renderCell: (params) => {
         return (
-          <div className="productListItem">
-            {/* <img className="productListImg" src={params.row.col10} alt="" /> */}
-            {params.row.col1}
-          </div>
+          <Stack direction="row" alignItems="center" spacing={1}>
+            <Tooltip title="Medical Condition">
+              <IconButton
+                aria-label="edit"
+                size="large"
+                color="blue"
+                onClick={() => handleOpen1(params.row.id, params.row.col1)}
+              >
+                <PreviewIcon />
+              </IconButton>
+            </Tooltip>
+          </Stack>
         );
       },
     },
@@ -521,6 +541,23 @@ export const MedicalRecordListImplPharmacy = () => {
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
             <pre>{content}</pre>
+          </Typography>
+        </Box>
+      </Modal>
+
+      <Modal
+        open={open1}
+        onClose={handleClose1}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+        keepMounted
+      >
+        <Box sx={style}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            {title1}
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            <pre>{content1}</pre>
           </Typography>
         </Box>
       </Modal>

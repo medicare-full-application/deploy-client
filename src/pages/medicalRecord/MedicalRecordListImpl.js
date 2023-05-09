@@ -27,6 +27,7 @@ import { getDoctorUsers, getUsers } from "../../redux/userApiCalls";
 import { removeDoctorUsers, removeOtherUsers } from "../../redux/userRedux";
 import NoteIcon from "@mui/icons-material/Note";
 import Tooltip from "@mui/material/Tooltip";
+import PreviewIcon from '@mui/icons-material/Preview';
 
 const style = {
   position: "absolute",
@@ -58,12 +59,14 @@ export const MedicalRecordListImpl = () => {
 
   const [open, setOpen] = React.useState(false);
   const [open1, setOpen1] = React.useState(false);
+  const [open2, setOpen2] = React.useState(false);
 
   //   const [deleteTrigger, setDeleteTrigger] = React.useState("");
   const [rows, setRows] = React.useState([]);
   const [title, setTitle] = React.useState(null);
   const [content, setContent] = React.useState(null);
   const [pharmacyNote, setPharmacyNote] = React.useState(null);
+  const [medicalCondition, setMedicalCondition] = React.useState(null);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -252,37 +255,6 @@ export const MedicalRecordListImpl = () => {
     getNormalUserData();
   }, [trigger, dispatch, deleteTrigger]);
 
-  const deleteItem = (id) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#378cbb",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        // alert(id);
-        const status = await deleteMedicalRecord(id, dispatch, token);
-        if (status) {
-          setDeleteTrigger(deleteTrigger + "z");
-          Swal.fire(
-            "Deleted!",
-            "Your MedicalRecord has been deleted.",
-            "success"
-          );
-        } else {
-          Swal.fire(
-            "Can't Delete!",
-            "Your MedicalRecord has not been deleted.",
-            "error"
-          );
-        }
-      }
-    });
-  };
-
   const handleOpen = (id, prescription) => {
     setOpen(true);
     setTitle("Prescription");
@@ -294,6 +266,12 @@ export const MedicalRecordListImpl = () => {
     setOpen1(true);
   };
   const handleClose1 = () => setOpen1(false);
+
+  const handleOpen2 = (id, medicalCondition) => {
+    setMedicalCondition(medicalCondition);
+    setOpen2(true);
+  };
+  const handleClose2 = () => setOpen2(false);
 
   const addNewNote = async (medicalRecordId, pharmacyNote) => {
     console.log(medicalRecordId);
@@ -390,10 +368,18 @@ export const MedicalRecordListImpl = () => {
       width: 150,
       renderCell: (params) => {
         return (
-          <div className="productListItem">
-            {/* <img className="productListImg" src={params.row.col10} alt="" /> */}
-            {params.row.col1}
-          </div>
+          <Stack direction="row" alignItems="center" spacing={1}>
+            <Tooltip title="Medical Condition">
+              <IconButton
+                aria-label="edit"
+                size="large"
+                color="blue"
+                onClick={() => handleOpen2(params.row.id, params.row.col1)}
+              >
+                <PreviewIcon />
+              </IconButton>
+            </Tooltip>
+          </Stack>
         );
       },
     },
@@ -486,46 +472,6 @@ export const MedicalRecordListImpl = () => {
         );
       },
     },
-    // {
-    //   field: "action",
-    //   headerName: "Action",
-    //   width: 250,
-    //   renderCell: (params) => {
-    //     return (
-    //       <>
-    //         <Stack direction="row" alignItems="center" spacing={1}>
-    //           <IconButton
-    //             aria-label="edit"
-    //             size="large"
-    //             color="success"
-    //             onClick={() => updateItem(params.row.id)}
-    //           >
-    //             <EditIcon />
-    //           </IconButton>
-
-    //           <IconButton
-    //             aria-label="delete"
-    //             size="large"
-    //             color="error"
-    //             onClick={() => deleteItem(params.row.id)}
-    //           >
-    //             <DeleteIcon />
-    //           </IconButton>
-
-    //           <Button
-    //             variant="contained"
-    //             color="secondary"
-    //             size="small"
-    //             endIcon={<AddIcon />}
-    //             onClick={() => createMedicalRecord(params.row.id)}
-    //           >
-    //             Create
-    //           </Button>
-    //         </Stack>
-    //       </>
-    //     );
-    //   },
-    // },
   ];
   return (
     <>
@@ -606,6 +552,27 @@ export const MedicalRecordListImpl = () => {
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
             <pre>
               {pharmacyNote ? pharmacyNote : "The pharmacy did not add a note."}
+            </pre>
+          </Typography>
+        </Box>
+      </Modal>
+
+      <Modal
+        open={open2}
+        onClose={handleClose2}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+        keepMounted
+      >
+        <Box sx={style}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            Medical Condition
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            <pre>
+              {medicalCondition
+                ? medicalCondition
+                : "There is no medical condition."}
             </pre>
           </Typography>
         </Box>
